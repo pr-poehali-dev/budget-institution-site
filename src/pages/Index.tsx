@@ -5,6 +5,7 @@ type Section =
   | "home"
   | "about"
   | "services"
+  | "paid"
   | "documents"
   | "news"
   | "contacts"
@@ -15,6 +16,7 @@ const NAV_ITEMS: { id: Section; label: string; icon: string }[] = [
   { id: "home", label: "Главная", icon: "House" },
   { id: "about", label: "Об учреждении", icon: "Building2" },
   { id: "services", label: "Услуги", icon: "ClipboardList" },
+  { id: "paid", label: "Платные услуги", icon: "CreditCard" },
   { id: "specialists", label: "Специалисты", icon: "Users" },
   { id: "documents", label: "Документы", icon: "FileText" },
   { id: "news", label: "Новости", icon: "Newspaper" },
@@ -114,6 +116,100 @@ const SPECIALISTS = [
     education: null,
     certification: null,
     category: null,
+  },
+];
+
+const PAID_CATEGORIES = [
+  {
+    id: "therapy",
+    name: "Терапия",
+    icon: "Stethoscope",
+    services: [
+      { name: "Приём врача-терапевта (первичный)", code: "B01.047.001", price: 1200 },
+      { name: "Приём врача-терапевта (повторный)", code: "B01.047.002", price: 900 },
+      { name: "Приём врача-терапевта на дому", code: "B01.047.003", price: 2500 },
+      { name: "Оформление медицинской документации", code: "B01.047.010", price: 500 },
+      { name: "Выдача справки для водительского удостоверения", code: "B04.047.001", price: 800 },
+    ],
+  },
+  {
+    id: "surgery",
+    name: "Хирургия",
+    icon: "Scissors",
+    services: [
+      { name: "Приём врача-хирурга (первичный)", code: "B01.058.001", price: 1400 },
+      { name: "Приём врача-хирурга (повторный)", code: "B01.058.002", price: 1100 },
+      { name: "Удаление поверхностных новообразований", code: "A16.01.018", price: 3500 },
+      { name: "Перевязка послеоперационной раны", code: "A11.01.011", price: 700 },
+    ],
+  },
+  {
+    id: "neurology",
+    name: "Неврология",
+    icon: "Brain",
+    services: [
+      { name: "Приём врача-невролога (первичный)", code: "B01.023.001", price: 1500 },
+      { name: "Приём врача-невролога (повторный)", code: "B01.023.002", price: 1200 },
+      { name: "Приём врача-невролога на дому", code: "B01.023.003", price: 2800 },
+    ],
+  },
+  {
+    id: "diagnostics",
+    name: "Диагностика",
+    icon: "Activity",
+    services: [
+      { name: "Электрокардиография (ЭКГ)", code: "A05.10.006", price: 600 },
+      { name: "Суточное мониторирование АД", code: "A04.10.002.001", price: 2200 },
+      { name: "Исследование функции внешнего дыхания", code: "A05.10.001", price: 1100 },
+      { name: "Общий анализ крови с лейкоформулой", code: "A09.05.003.002", price: 450 },
+      { name: "Общий анализ мочи", code: "A09.28.001", price: 350 },
+      { name: "Биохимический анализ крови (10 показателей)", code: "A09.05.041", price: 1800 },
+    ],
+  },
+  {
+    id: "certificates",
+    name: "Справки и документы",
+    icon: "FileCheck",
+    services: [
+      { name: "Справка для бассейна (форма 1)", code: "B04.047.002", price: 600 },
+      { name: "Справка для санаторно-курортного лечения", code: "B04.047.003", price: 900 },
+      { name: "Справка в учебное заведение", code: "B04.047.004", price: 500 },
+      { name: "Медицинское заключение для нотариуса", code: "B04.047.005", price: 1500 },
+      { name: "Выписка из медицинской карты (срочная)", code: "B04.047.006", price: 700 },
+    ],
+  },
+];
+
+const PAID_STAFF = [
+  {
+    name: "Иванова Светлана Петровна",
+    role: "Врач-терапевт участковый",
+    category: "Высшая квалификационная категория",
+    services: ["Терапия", "Справки и документы"],
+    schedule: [
+      { day: "Понедельник", time: "14:00 – 18:00" },
+      { day: "Среда", time: "09:00 – 13:00" },
+    ],
+  },
+  {
+    name: "Петров Алексей Николаевич",
+    role: "Врач-хирург",
+    category: "Первая квалификационная категория",
+    services: ["Хирургия"],
+    schedule: [
+      { day: "Вторник", time: "14:00 – 18:00" },
+      { day: "Пятница", time: "09:00 – 13:00" },
+    ],
+  },
+  {
+    name: "Козлов Дмитрий Владимирович",
+    role: "Врач-невролог",
+    category: null,
+    services: ["Неврология"],
+    schedule: [
+      { day: "Среда", time: "14:00 – 18:00" },
+      { day: "Пятница", time: "14:00 – 18:00" },
+    ],
   },
 ];
 
@@ -373,6 +469,7 @@ export default function Index() {
         {activeSection === "home" && <HomeSection navigate={navigate} />}
         {activeSection === "about" && <AboutSection />}
         {activeSection === "services" && <ServicesSection />}
+        {activeSection === "paid" && <PaidServicesSection />}
         {activeSection === "specialists" && <SpecialistsSection />}
         {activeSection === "documents" && <DocumentsSection />}
         {activeSection === "news" && <NewsSection />}
@@ -1066,6 +1163,221 @@ function DocumentsSection() {
           </div>
         ))}
       </div>
+      </div>
+    </div>
+  );
+}
+
+function PaidServicesSection() {
+  const [activeTab, setActiveTab] = useState<string>(PAID_CATEGORIES[0].id);
+  const activeCategory = PAID_CATEGORIES.find((c) => c.id === activeTab)!;
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="section-title text-4xl">Платные услуги</h1>
+        <div className="w-16 h-1 rounded mt-2" style={{ background: "var(--gov-blue)" }}></div>
+        <p className="text-gray-600 text-lg mt-3">
+          Перечень платных медицинских услуг, прайс-лист и порядок оплаты
+        </p>
+      </div>
+
+      {/* Правовая основа */}
+      <div className="bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4 flex items-start gap-3">
+        <Icon name="Scale" size={18} className="text-blue-600 flex-shrink-0 mt-0.5" />
+        <p className="text-blue-800 text-sm leading-relaxed">
+          Платные медицинские услуги предоставляются в соответствии с{" "}
+          <strong>Постановлением Правительства РФ №1006 от 04.10.2012</strong>{" "}
+          «Об утверждении Правил предоставления медицинскими организациями платных медицинских услуг».
+          Услуги ОМС предоставляются <strong>бесплатно</strong> при наличии полиса ОМС.
+        </p>
+      </div>
+
+      {/* Прайс-лист — вкладки по категориям */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Icon name="Receipt" size={18} style={{ color: "var(--gov-blue)" }} />
+            <h2 className="font-bold text-lg" style={{ color: "var(--gov-blue)" }}>Прайс-лист</h2>
+          </div>
+          <span className="text-xs text-gray-400">Актуально с 01.01.2026</span>
+        </div>
+
+        {/* Табы */}
+        <div className="flex overflow-x-auto border-b border-gray-100 bg-gray-50">
+          {PAID_CATEGORIES.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveTab(cat.id)}
+              className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold whitespace-nowrap transition-colors border-b-2 -mb-px ${
+                activeTab === cat.id
+                  ? "border-blue-600 text-blue-700 bg-white"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <Icon name={cat.icon} size={14} />
+              {cat.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Таблица */}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-gray-50 border-b border-gray-100">
+                <th className="text-left py-3 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Код</th>
+                <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Наименование услуги</th>
+                <th className="text-right py-3 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider w-36">Цена, руб.</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {activeCategory.services.map((svc, i) => (
+                <tr key={i} className="hover:bg-blue-50/40 transition-colors">
+                  <td className="py-3.5 px-5">
+                    <span className="font-mono text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{svc.code}</span>
+                  </td>
+                  <td className="py-3.5 px-4 text-gray-900 font-medium">{svc.name}</td>
+                  <td className="py-3.5 px-5 text-right">
+                    <span className="font-bold text-gray-900 text-base">{svc.price.toLocaleString("ru-RU")}</span>
+                    <span className="text-gray-400 text-sm ml-1">₽</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs text-gray-500">Цены указаны за одну услугу, включая НДС. Окончательная стоимость определяется на приёме.</p>
+          <button
+            className="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg text-white transition-all hover:opacity-90"
+            style={{ background: "var(--gov-blue)" }}
+          >
+            <Icon name="Download" size={13} />
+            Скачать полный прайс (PDF)
+          </button>
+        </div>
+      </div>
+
+      {/* Порядок предоставления и оплата */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2" style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}>
+            <Icon name="ListOrdered" size={18} style={{ color: "var(--gov-blue)" }} />
+            <h2 className="font-bold text-base" style={{ color: "var(--gov-blue)" }}>Порядок предоставления услуг</h2>
+          </div>
+          <div className="p-5 space-y-3">
+            {[
+              { n: "1", text: "Обратитесь в регистратуру или позвоните по тел. +7 (495) 000-00-00 для записи на приём" },
+              { n: "2", text: "Заключите договор на оказание платных медицинских услуг (оформляется на месте)" },
+              { n: "3", text: "Произведите оплату в кассе учреждения или безналичным способом до приёма" },
+              { n: "4", text: "Получите квитанцию/чек и пройдите на приём к врачу в назначенное время" },
+              { n: "5", text: "По завершении приёма вам выдадут медицинские документы и заключение" },
+            ].map((step) => (
+              <div key={step.n} className="flex items-start gap-3">
+                <div
+                  className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
+                  style={{ background: "var(--gov-blue)" }}
+                >
+                  {step.n}
+                </div>
+                <p className="text-gray-700 text-sm leading-relaxed pt-0.5">{step.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2" style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}>
+            <Icon name="CreditCard" size={18} style={{ color: "var(--gov-blue)" }} />
+            <h2 className="font-bold text-base" style={{ color: "var(--gov-blue)" }}>Способы оплаты</h2>
+          </div>
+          <div className="p-5 space-y-3">
+            {[
+              { icon: "Banknote", label: "Наличные", desc: "Касса учреждения, Пн–Пт 08:30–19:30" },
+              { icon: "CreditCard", label: "Банковская карта", desc: "Visa, Mastercard, МИР — терминал на кассе" },
+              { icon: "Smartphone", label: "СБП (Система быстрых платежей)", desc: "Оплата по QR-коду с любого банка" },
+              { icon: "Globe", label: "Онлайн через Госуслуги", desc: "В разделе «Запись к врачу» на gosuslugi.ru" },
+            ].map((m, i) => (
+              <div key={i} className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}>
+                  <Icon name={m.icon} size={16} style={{ color: "var(--gov-blue)" }} />
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900 text-sm">{m.label}</div>
+                  <div className="text-gray-500 text-xs mt-0.5">{m.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mx-5 mb-5 bg-amber-50 rounded-xl px-4 py-3 border border-amber-100">
+            <p className="text-xs text-amber-800 leading-relaxed">
+              <strong>Внимание:</strong> оплата принимается строго до начала оказания услуги.
+              Возврат средств — в соответствии со ст. 782 ГК РФ и Законом о защите прав потребителей.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Сотрудники, участвующие в платных услугах */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2" style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}>
+          <Icon name="Users" size={18} style={{ color: "var(--gov-blue)" }} />
+          <h2 className="font-bold text-base" style={{ color: "var(--gov-blue)" }}>Сотрудники, оказывающие платные услуги</h2>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {PAID_STAFF.map((s, i) => (
+            <div key={i} className="px-6 py-5 flex flex-col sm:flex-row sm:items-start gap-4">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-base"
+                style={{ background: "var(--gov-blue)" }}
+              >
+                {s.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-gray-900">{s.name}</div>
+                <div className="text-sm font-medium mt-0.5" style={{ color: "var(--gov-blue)" }}>{s.role}</div>
+                {s.category && (
+                  <div className="text-xs text-gray-500 mt-0.5">{s.category}</div>
+                )}
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {s.services.map((sv, j) => (
+                    <span key={j} className="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-0.5 rounded-full border border-blue-100">
+                      {sv}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex-shrink-0 space-y-1.5 min-w-[180px]">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">График платного приёма</div>
+                {s.schedule.map((sch, j) => (
+                  <div key={j} className="flex justify-between text-sm bg-gray-50 rounded-lg px-3 py-1.5">
+                    <span className="text-gray-600">{sch.day}</span>
+                    <span className="font-semibold text-gray-900 ml-4">{sch.time}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Контакты записи */}
+      <div className="bg-green-50 border border-green-200 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <Icon name="Phone" size={22} className="text-green-600 flex-shrink-0" />
+        <div className="flex-1">
+          <div className="font-bold text-green-800 text-base">Запись на платный приём</div>
+          <div className="text-green-700 text-sm mt-0.5">По телефону +7 (495) 000-00-00, Пн–Пт с 08:00 до 20:00</div>
+        </div>
+        <a
+          href="tel:74950000000"
+          className="flex-shrink-0 flex items-center gap-2 font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:opacity-90"
+          style={{ background: "#16a34a" }}
+        >
+          <Icon name="PhoneCall" size={15} />
+          Позвонить
+        </a>
       </div>
     </div>
   );
