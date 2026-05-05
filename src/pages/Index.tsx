@@ -1,8 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Icon from "@/components/ui/icon";
-
-type FontSize = "normal" | "large" | "xlarge";
-type ContrastMode = "normal" | "high" | "dark";
 
 type Section =
   | "home"
@@ -137,23 +134,6 @@ const ANNOUNCEMENTS = [
 export default function Index() {
   const [activeSection, setActiveSection] = useState<Section>("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [fontSize, setFontSize] = useState<FontSize>("normal");
-  const [contrast, setContrast] = useState<ContrastMode>("normal");
-  const [a11yOpen, setA11yOpen] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const [cookieAccepted, setCookieAccepted] = useState(() => {
-    return localStorage.getItem("cookie_consent") === "accepted";
-  });
-
-  const acceptCookies = () => {
-    localStorage.setItem("cookie_consent", "accepted");
-    setCookieAccepted(true);
-  };
-
-  const rejectCookies = () => {
-    localStorage.setItem("cookie_consent", "rejected");
-    setCookieAccepted(true);
-  };
 
   const navigate = (section: Section) => {
     setActiveSection(section);
@@ -161,95 +141,20 @@ export default function Index() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  useEffect(() => {
-    const onScroll = () => setShowScrollTop(window.scrollY > 300);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const fontSizeClass = fontSize === "large" ? "text-lg" : fontSize === "xlarge" ? "text-xl" : "";
-
-  const contrastStyle: React.CSSProperties =
-    contrast === "high"
-      ? { filter: "contrast(1.5) saturate(0)" }
-      : contrast === "dark"
-      ? { filter: "invert(1) hue-rotate(180deg)" }
-      : {};
-
   return (
-    <div className={`min-h-screen bg-[#f0f4f8] font-golos ${fontSizeClass}`} style={contrastStyle}>
-      {/* Accessibility bar */}
+    <div className="min-h-screen bg-[#f0f4f8] font-golos">
+      {/* Top strip */}
       <div className="bg-[#1a2533] text-white text-sm py-2 px-4">
-        <div className="max-w-6xl mx-auto flex flex-wrap gap-x-4 gap-y-1 justify-between items-center">
-          <div className="flex flex-wrap gap-x-6 gap-y-1 items-center">
-            <span className="flex items-center gap-2">
-              <Icon name="Clock" size={14} />
-              Пн–Пт: 09:00–18:00, обед 13:00–14:00
-            </span>
-            <span className="flex items-center gap-2">
-              <Icon name="Phone" size={14} />
-              +7 (495) 000-00-00
-            </span>
-          </div>
-          {/* Версия для слабовидящих */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setA11yOpen(!a11yOpen)}
-              className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-3 py-1 rounded-lg transition-colors text-xs font-medium"
-              title="Версия для слабовидящих"
-            >
-              <Icon name="Eye" size={13} />
-              <span className="hidden sm:inline">Версия для слабовидящих</span>
-              <span className="sm:hidden">А</span>
-            </button>
-          </div>
+        <div className="max-w-6xl mx-auto flex flex-wrap gap-x-6 gap-y-1 justify-between items-center">
+          <span className="flex items-center gap-2">
+            <Icon name="Clock" size={14} />
+            Пн–Пт: 09:00–18:00, обед 13:00–14:00
+          </span>
+          <span className="flex items-center gap-2">
+            <Icon name="Phone" size={14} />
+            +7 (495) 000-00-00
+          </span>
         </div>
-
-        {/* A11y panel */}
-        {a11yOpen && (
-          <div className="max-w-6xl mx-auto mt-2 pb-2 border-t border-white/20 pt-2 flex flex-wrap gap-4 items-center animate-fade-in">
-            <div className="flex items-center gap-2">
-              <span className="text-white/70 text-xs">Размер шрифта:</span>
-              {(["normal", "large", "xlarge"] as FontSize[]).map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setFontSize(f)}
-                  className={`w-8 h-8 rounded font-bold transition-colors ${fontSize === f ? "bg-white text-[#1a2533]" : "bg-white/20 hover:bg-white/30 text-white"}`}
-                  style={{ fontSize: f === "normal" ? 13 : f === "large" ? 16 : 19 }}
-                >
-                  А
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-white/70 text-xs">Контраст:</span>
-              <button
-                onClick={() => setContrast("normal")}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${contrast === "normal" ? "bg-white text-[#1a2533]" : "bg-white/20 hover:bg-white/30 text-white"}`}
-              >
-                Обычный
-              </button>
-              <button
-                onClick={() => setContrast("high")}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${contrast === "high" ? "bg-white text-[#1a2533]" : "bg-white/20 hover:bg-white/30 text-white"}`}
-              >
-                Высокий
-              </button>
-              <button
-                onClick={() => setContrast("dark")}
-                className={`px-3 py-1 rounded text-xs font-medium transition-colors ${contrast === "dark" ? "bg-white text-[#1a2533]" : "bg-white/20 hover:bg-white/30 text-white"}`}
-              >
-                Тёмный
-              </button>
-            </div>
-            <button
-              onClick={() => { setFontSize("normal"); setContrast("normal"); }}
-              className="text-white/60 hover:text-white text-xs underline"
-            >
-              Сбросить
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Header */}
@@ -325,93 +230,6 @@ export default function Index() {
         {activeSection === "contacts" && <ContactsSection />}
       </main>
 
-      {/* ===== FIXED WIDGETS ===== */}
-
-      {/* Госуслуги — фиксированная кнопка справа по середине */}
-      <a
-        href="https://www.gosuslugi.ru"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-1 py-4 px-2 rounded-l-2xl shadow-xl transition-all hover:px-3 group"
-        style={{ background: "#0d4cd3", writingMode: "vertical-rl" }}
-        title="Перейти на Госуслуги"
-      >
-        <span className="text-white font-bold text-xs tracking-widest uppercase rotate-180 select-none">Госуслуги</span>
-        <div className="w-6 h-0.5 bg-white/40 rounded my-1"></div>
-        <span className="text-white/70 text-[10px] rotate-180 select-none">gosuslugi.ru</span>
-      </a>
-
-      {/* Горячая линия — левый нижний угол */}
-      <div className="fixed bottom-6 left-4 z-50 flex flex-col gap-2 items-start">
-        <a
-          href="tel:88002000000"
-          className="flex items-center gap-2 text-white font-bold px-4 py-3 rounded-2xl shadow-lg text-sm transition-all hover:scale-105 hover:shadow-xl"
-          style={{ background: "var(--gov-red, #c0392b)" }}
-          title="Горячая линия"
-        >
-          <Icon name="PhoneCall" size={18} />
-          <span className="hidden sm:inline">Горячая линия: 8-800-200-00-00</span>
-          <span className="sm:hidden">8-800-200-00-00</span>
-        </a>
-        <a
-          href="#anticorruption"
-          className="flex items-center gap-2 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md text-xs transition-all hover:scale-105"
-          style={{ background: "#7c3aed" }}
-          title="Противодействие коррупции"
-        >
-          <Icon name="ShieldCheck" size={15} />
-          <span>Противодействие коррупции</span>
-        </a>
-      </div>
-
-      {/* Cookie banner */}
-      {!cookieAccepted && (
-        <div className="fixed bottom-0 left-0 right-0 z-[60] animate-fade-in" style={{ background: "rgba(26,37,51,0.97)", backdropFilter: "blur(6px)" }}>
-          <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex items-start gap-3 flex-1">
-              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: "var(--gov-blue)" }}>
-                <Icon name="Cookie" size={18} className="text-white" />
-              </div>
-              <div className="text-sm text-gray-300 leading-relaxed">
-                <span className="font-semibold text-white">Использование файлов cookie.</span>{" "}
-                Настоящий сайт использует файлы cookie и аналогичные технологии в соответствии с{" "}
-                <a href="#" className="text-blue-400 hover:text-blue-300 underline">Политикой конфиденциальности</a>.
-                {" "}Продолжая работу с сайтом, вы соглашаетесь на обработку персональных данных согласно{" "}
-                <span className="text-gray-400">Федеральному закону №152-ФЗ «О персональных данных».</span>
-              </div>
-            </div>
-            <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto">
-              <button
-                onClick={acceptCookies}
-                className="flex-1 sm:flex-none font-semibold px-5 py-2.5 rounded-xl text-sm text-white transition-all hover:opacity-90"
-                style={{ background: "var(--gov-blue)" }}
-              >
-                Принять
-              </button>
-              <button
-                onClick={rejectCookies}
-                className="flex-1 sm:flex-none font-medium px-5 py-2.5 rounded-xl text-sm text-gray-300 border border-gray-600 hover:border-gray-400 transition-all"
-              >
-                Отклонить
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Кнопка наверх — правый нижний угол */}
-      {showScrollTop && (
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-6 right-4 z-50 w-12 h-12 rounded-2xl text-white shadow-lg flex items-center justify-center transition-all hover:scale-110 hover:shadow-xl animate-fade-in"
-          style={{ background: "var(--gov-blue)" }}
-          title="Наверх"
-          aria-label="Прокрутить вверх"
-        >
-          <Icon name="ArrowUp" size={22} />
-        </button>
-      )}
-
       {/* Footer */}
       <footer className="mt-12 bg-[#1a2533] text-white">
         <div className="max-w-6xl mx-auto px-4 py-8">
@@ -445,30 +263,7 @@ export default function Index() {
               </div>
             </div>
           </div>
-          {/* Антикоррупционный блок */}
-          <div id="anticorruption" className="border-t border-gray-700 mt-8 pt-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "#7c3aed" }}>
-                  <Icon name="ShieldCheck" size={20} className="text-white" />
-                </div>
-                <div>
-                  <div className="font-bold text-white">Противодействие коррупции</div>
-                  <div className="text-xs text-gray-400">В соответствии с Федеральным законом №273-ФЗ</div>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-3 text-sm">
-                <a href="#" className="text-purple-300 hover:text-white transition-colors underline">Антикоррупционная политика</a>
-                <a href="#" className="text-purple-300 hover:text-white transition-colors underline">Сообщить о коррупции</a>
-                <a href="https://bus.gov.ru" target="_blank" rel="noopener noreferrer" className="text-purple-300 hover:text-white transition-colors underline">bus.gov.ru</a>
-              </div>
-            </div>
-            <div className="bg-purple-900/30 rounded-xl px-4 py-3 text-sm text-gray-300 border border-purple-800/40">
-              Телефон доверия по вопросам коррупции: <strong className="text-white">8-800-200-00-01</strong> (звонок бесплатный)
-            </div>
-          </div>
-
-          <div className="border-t border-gray-700 mt-6 pt-4 text-center text-sm text-gray-500">
+          <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-500">
             © 2026 Государственное учреждение. Все права защищены.
           </div>
         </div>
@@ -537,35 +332,6 @@ function HomeSection({ navigate }: { navigate: (s: Section) => void }) {
             </button>
           ))}
         </div>
-      </section>
-
-      {/* Госуслуги баннер */}
-      <section>
-        <a
-          href="https://www.gosuslugi.ru"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col sm:flex-row items-center gap-5 rounded-2xl p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
-          style={{ background: "linear-gradient(120deg, #0d4cd3 0%, #1a6eff 100%)" }}
-        >
-          <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="8" fill="#0d4cd3"/>
-              <text x="18" y="25" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold" fontFamily="Arial">Г</text>
-            </svg>
-          </div>
-          <div className="flex-1 text-center sm:text-left">
-            <div className="text-white font-black text-xl mb-1">Госуслуги</div>
-            <div className="text-blue-200 text-sm leading-relaxed">
-              Получите государственные услуги учреждения в электронном виде — без очередей, из любого места
-            </div>
-          </div>
-          <div className="flex items-center gap-2 bg-white font-bold px-5 py-3 rounded-xl text-sm flex-shrink-0 transition-all hover:shadow"
-            style={{ color: "#0d4cd3" }}>
-            Перейти на портал
-            <Icon name="ExternalLink" size={15} />
-          </div>
-        </a>
       </section>
 
       <section>
