@@ -25,7 +25,7 @@ const NAV_ITEMS: { id: Section; label: string; icon: string }[] = [
 const SPECIALISTS = [
   {
     name: "Иванова Светлана Петровна",
-    role: "Начальник отдела",
+    role: "Врач-терапевт участковый",
     room: "Каб. 101",
     schedule: [
       { day: "Понедельник", time: "09:00 – 13:00" },
@@ -34,10 +34,24 @@ const SPECIALISTS = [
     ],
     reception: "Вторник, Четверг: 10:00 – 12:00",
     phone: "+7 (495) 000-00-01",
+    consentGiven: true,
+    education: {
+      level: "Высшее",
+      institution: "Первый Московский государственный медицинский университет им. И.М. Сеченова",
+      year: "2005",
+      specialty: "Лечебное дело",
+      qualification: "Врач",
+    },
+    certification: {
+      institution: "ФГБОУ ДПО РМАНПО Минздрава России",
+      year: "2022",
+      specialty: "Терапия",
+    },
+    category: "Высшая квалификационная категория",
   },
   {
     name: "Петров Алексей Николаевич",
-    role: "Ведущий специалист",
+    role: "Врач-хирург",
     room: "Каб. 205",
     schedule: [
       { day: "Вторник", time: "09:00 – 13:00" },
@@ -45,10 +59,24 @@ const SPECIALISTS = [
     ],
     reception: "Понедельник, Среда: 11:00 – 13:00",
     phone: "+7 (495) 000-00-02",
+    consentGiven: true,
+    education: {
+      level: "Высшее",
+      institution: "Российский национальный исследовательский медицинский университет им. Н.И. Пирогова",
+      year: "2008",
+      specialty: "Лечебное дело",
+      qualification: "Врач",
+    },
+    certification: {
+      institution: "ФГБОУ ДПО РМАНПО Минздрава России",
+      year: "2023",
+      specialty: "Хирургия",
+    },
+    category: "Первая квалификационная категория",
   },
   {
     name: "Сидорова Мария Юрьевна",
-    role: "Специалист 1-й категории",
+    role: "Врач-педиатр участковый",
     room: "Каб. 312",
     schedule: [
       { day: "Понедельник", time: "10:00 – 14:00" },
@@ -57,10 +85,24 @@ const SPECIALISTS = [
     ],
     reception: "Вторник: 09:00 – 11:00, Пятница: 15:00 – 17:00",
     phone: "+7 (495) 000-00-03",
+    consentGiven: true,
+    education: {
+      level: "Высшее",
+      institution: "Московский государственный медико-стоматологический университет им. А.И. Евдокимова",
+      year: "2010",
+      specialty: "Педиатрия",
+      qualification: "Врач-педиатр",
+    },
+    certification: {
+      institution: "ФГАОУ ВО Первый МГМУ им. И.М. Сеченова Минздрава России",
+      year: "2022",
+      specialty: "Педиатрия",
+    },
+    category: "Вторая квалификационная категория",
   },
   {
     name: "Козлов Дмитрий Владимирович",
-    role: "Юрисконсульт",
+    role: "Врач-невролог",
     room: "Каб. 118",
     schedule: [
       { day: "Вторник", time: "10:00 – 14:00" },
@@ -68,6 +110,10 @@ const SPECIALISTS = [
     ],
     reception: "По предварительной записи",
     phone: "+7 (495) 000-00-04",
+    consentGiven: false,
+    education: null,
+    certification: null,
+    category: null,
   },
 ];
 
@@ -601,44 +647,120 @@ function SpecialistsSection() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      {/* Уведомление о согласии */}
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+        <Icon name="Info" size={18} className="text-amber-600 flex-shrink-0 mt-0.5" />
+        <p className="text-amber-800 text-sm leading-relaxed">
+          Сведения об образовании публикуются только при наличии <strong>письменного согласия</strong> медицинского работника
+          на обработку и размещение персональных данных в соответствии с ФЗ №152-ФЗ «О персональных данных».
+        </p>
+      </div>
+
+      <div className="space-y-6">
         {SPECIALISTS.map((sp, i) => (
-          <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-start gap-4 mb-4">
+          <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+            {/* Шапка карточки */}
+            <div className="p-6 flex flex-col sm:flex-row sm:items-start gap-4">
               <div
-                className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-xl font-bold"
+                className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold"
                 style={{ background: "var(--gov-blue)" }}
               >
                 {sp.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                 <div className="font-bold text-xl text-gray-900">{sp.name}</div>
-                <div className="text-gray-500 font-medium">{sp.role}</div>
-                <div className="text-sm font-medium mt-0.5" style={{ color: "var(--gov-blue-light)" }}>{sp.room}</div>
+                <div className="font-semibold mt-0.5" style={{ color: "var(--gov-blue)" }}>{sp.role}</div>
+                <div className="text-sm text-gray-500 mt-0.5">{sp.room}</div>
+                {sp.category && (
+                  <span className="inline-block mt-2 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">
+                    {sp.category}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-600 flex-shrink-0">
+                <Icon name="Phone" size={15} style={{ color: "var(--gov-blue)" }} />
+                <span className="font-medium">{sp.phone}</span>
               </div>
             </div>
 
-            <div className="space-y-2 mb-4">
-              <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Расписание работы</div>
-              {sp.schedule.map((s, j) => (
-                <div key={j} className="flex justify-between text-base bg-gray-50 rounded-lg px-3 py-2">
-                  <span className="text-gray-700">{s.day}</span>
-                  <span className="font-semibold text-gray-900">{s.time}</span>
+            <div className="border-t border-gray-100 grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+
+              {/* Расписание + приём */}
+              <div className="p-5 space-y-3">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Icon name="CalendarDays" size={13} /> Расписание работы
                 </div>
-              ))}
-            </div>
-
-            <div className="bg-amber-50 rounded-xl px-4 py-3 mb-3">
-              <div className="text-sm font-semibold text-amber-800 mb-1 flex items-center gap-1">
-                <Icon name="UserCheck" size={14} /> Приём граждан
+                <div className="space-y-1.5">
+                  {sp.schedule.map((s, j) => (
+                    <div key={j} className="flex justify-between text-sm bg-gray-50 rounded-lg px-3 py-2">
+                      <span className="text-gray-700">{s.day}</span>
+                      <span className="font-semibold text-gray-900">{s.time}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="bg-amber-50 rounded-xl px-3 py-2.5 mt-1">
+                  <div className="text-xs font-semibold text-amber-700 mb-0.5 flex items-center gap-1">
+                    <Icon name="UserCheck" size={12} /> Приём граждан
+                  </div>
+                  <div className="text-amber-900 text-sm font-medium">{sp.reception}</div>
+                </div>
               </div>
-              <div className="text-amber-900 font-medium">{sp.reception}</div>
+
+              {/* Сведения об образовании */}
+              <div className="p-5">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 mb-3">
+                  <Icon name="GraduationCap" size={13} /> Сведения об образовании
+                </div>
+                {sp.consentGiven && sp.education ? (
+                  <div className="space-y-2.5">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                      <div>
+                        <div className="text-xs text-gray-400 mb-0.5">Уровень образования</div>
+                        <div className="font-semibold text-gray-800">{sp.education.level}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-400 mb-0.5">Год выдачи</div>
+                        <div className="font-semibold text-gray-800">{sp.education.year}</div>
+                      </div>
+                      <div className="col-span-2">
+                        <div className="text-xs text-gray-400 mb-0.5">Организация</div>
+                        <div className="font-semibold text-gray-800 text-sm leading-tight">{sp.education.institution}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-400 mb-0.5">Специальность</div>
+                        <div className="font-semibold text-gray-800">{sp.education.specialty}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-400 mb-0.5">Квалификация</div>
+                        <div className="font-semibold text-gray-800">{sp.education.qualification}</div>
+                      </div>
+                    </div>
+                    {sp.certification && (
+                      <div className="bg-green-50 rounded-xl px-3 py-2.5 border border-green-100">
+                        <div className="text-xs font-semibold text-green-700 mb-1.5 flex items-center gap-1">
+                          <Icon name="Award" size={12} /> Повышение квалификации
+                        </div>
+                        <div className="text-sm text-gray-700 leading-snug">
+                          <span className="font-medium">{sp.certification.specialty}</span>
+                          <span className="text-gray-500 mx-1">·</span>
+                          {sp.certification.year} г.
+                          <div className="text-xs text-gray-500 mt-0.5">{sp.certification.institution}</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-start gap-2.5 bg-gray-50 rounded-xl px-4 py-3">
+                    <Icon name="Lock" size={15} className="text-gray-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-gray-500 leading-relaxed">
+                      Сведения не публикуются — письменное согласие работника не получено
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex items-center gap-2 text-gray-600">
-              <Icon name="Phone" size={16} style={{ color: "var(--gov-blue)" }} />
-              <span className="font-medium">{sp.phone}</span>
-            </div>
           </div>
         ))}
       </div>
