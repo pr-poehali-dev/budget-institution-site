@@ -327,6 +327,20 @@ export default function Index() {
 
       {/* ===== FIXED WIDGETS ===== */}
 
+      {/* Госуслуги — фиксированная кнопка справа по середине */}
+      <a
+        href="https://www.gosuslugi.ru"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-1 py-4 px-2 rounded-l-2xl shadow-xl transition-all hover:px-3 group"
+        style={{ background: "#0d4cd3", writingMode: "vertical-rl" }}
+        title="Перейти на Госуслуги"
+      >
+        <span className="text-white font-bold text-xs tracking-widest uppercase rotate-180 select-none">Госуслуги</span>
+        <div className="w-6 h-0.5 bg-white/40 rounded my-1"></div>
+        <span className="text-white/70 text-[10px] rotate-180 select-none">gosuslugi.ru</span>
+      </a>
+
       {/* Горячая линия — левый нижний угол */}
       <div className="fixed bottom-6 left-4 z-50 flex flex-col gap-2 items-start">
         <a
@@ -523,6 +537,35 @@ function HomeSection({ navigate }: { navigate: (s: Section) => void }) {
             </button>
           ))}
         </div>
+      </section>
+
+      {/* Госуслуги баннер */}
+      <section>
+        <a
+          href="https://www.gosuslugi.ru"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col sm:flex-row items-center gap-5 rounded-2xl p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+          style={{ background: "linear-gradient(120deg, #0d4cd3 0%, #1a6eff 100%)" }}
+        >
+          <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center flex-shrink-0 shadow">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="8" fill="#0d4cd3"/>
+              <text x="18" y="25" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold" fontFamily="Arial">Г</text>
+            </svg>
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <div className="text-white font-black text-xl mb-1">Госуслуги</div>
+            <div className="text-blue-200 text-sm leading-relaxed">
+              Получите государственные услуги учреждения в электронном виде — без очередей, из любого места
+            </div>
+          </div>
+          <div className="flex items-center gap-2 bg-white font-bold px-5 py-3 rounded-xl text-sm flex-shrink-0 transition-all hover:shadow"
+            style={{ color: "#0d4cd3" }}>
+            Перейти на портал
+            <Icon name="ExternalLink" size={15} />
+          </div>
+        </a>
       </section>
 
       <section>
