@@ -110,6 +110,22 @@ const NEWS = [
   },
 ];
 
+const REQUISITES = {
+  fullName: "Государственное бюджетное учреждение здравоохранения «Городская поликлиника №1»",
+  shortName: "ГБУЗ «Городская поликлиника №1»",
+  ogrn: "1027700000001",
+  inn: "7700000001",
+  kpp: "770001001",
+  legalAddress: "127000, г. Москва, ул. Примерная, д. 1",
+  actualAddress: "127000, г. Москва, ул. Примерная, д. 1",
+  phone: "+7 (495) 000-00-00",
+  fax: "+7 (495) 000-00-99",
+  email: "info@example.gov.ru",
+  website: "www.example.gov.ru",
+  head: "Смирнов Николай Иванович",
+  headTitle: "Главный врач",
+};
+
 const ANNOUNCEMENTS = [
   {
     date: "05.05.2026",
@@ -263,8 +279,21 @@ export default function Index() {
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-8 pt-4 text-center text-sm text-gray-500">
-            © 2026 Государственное учреждение. Все права защищены.
+          {/* Реквизиты в футере */}
+          <div className="border-t border-gray-700 mt-8 pt-6">
+            <div className="text-xs text-gray-500 leading-relaxed space-y-1">
+              <div className="font-medium text-gray-400">{REQUISITES.fullName}</div>
+              <div className="flex flex-wrap gap-x-4 gap-y-0.5">
+                <span>ОГРН: {REQUISITES.ogrn}</span>
+                <span>ИНН: {REQUISITES.inn}</span>
+                <span>КПП: {REQUISITES.kpp}</span>
+              </div>
+              <div>Юр. адрес: {REQUISITES.legalAddress}</div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-700 mt-4 pt-4 text-center text-sm text-gray-500">
+            © 2026 {REQUISITES.shortName}. Все права защищены.
           </div>
         </div>
       </footer>
@@ -706,6 +735,79 @@ function ContactsSection() {
         <h1 className="section-title text-4xl">Контакты</h1>
         <div className="w-16 h-1 rounded mt-2" style={{ background: "var(--gov-blue)" }}></div>
       </div>
+
+      {/* Реквизиты */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3" style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}>
+          <Icon name="Landmark" size={20} style={{ color: "var(--gov-blue)" }} />
+          <h2 className="font-bold text-lg" style={{ color: "var(--gov-blue)" }}>Реквизиты юридического лица</h2>
+        </div>
+        <div className="p-6">
+          {/* Полное наименование */}
+          <div className="mb-5 pb-5 border-b border-gray-100">
+            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Полное наименование</div>
+            <div className="text-gray-900 font-semibold text-base leading-relaxed">{REQUISITES.fullName}</div>
+            <div className="text-gray-500 text-sm mt-0.5">Краткое: {REQUISITES.shortName}</div>
+          </div>
+
+          {/* ОГРН / ИНН / КПП */}
+          <div className="grid sm:grid-cols-3 gap-4 mb-5 pb-5 border-b border-gray-100">
+            {[
+              { label: "ОГРН", value: REQUISITES.ogrn },
+              { label: "ИНН", value: REQUISITES.inn },
+              { label: "КПП", value: REQUISITES.kpp },
+            ].map((r) => (
+              <div key={r.label} className="bg-gray-50 rounded-xl px-4 py-3">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{r.label}</div>
+                <div className="font-bold text-gray-900 text-lg tracking-wide">{r.value}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Адреса */}
+          <div className="grid sm:grid-cols-2 gap-4 mb-5 pb-5 border-b border-gray-100">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}>
+                <Icon name="MapPin" size={16} style={{ color: "var(--gov-blue)" }} />
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Юридический адрес</div>
+                <div className="text-gray-900 font-medium">{REQUISITES.legalAddress}</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}>
+                <Icon name="Building" size={16} style={{ color: "var(--gov-blue)" }} />
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Фактический адрес</div>
+                <div className="text-gray-900 font-medium">{REQUISITES.actualAddress}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Контактные данные */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: "Phone", label: "Телефон", value: REQUISITES.phone },
+              { icon: "Printer", label: "Факс", value: REQUISITES.fax },
+              { icon: "Mail", label: "Эл. почта", value: REQUISITES.email },
+              { icon: "Globe", label: "Сайт", value: REQUISITES.website },
+            ].map((c) => (
+              <div key={c.label} className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}>
+                  <Icon name={c.icon} size={16} style={{ color: "var(--gov-blue)" }} />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-0.5">{c.label}</div>
+                  <div className="text-gray-900 font-medium text-sm">{c.value}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-4">
           {[
