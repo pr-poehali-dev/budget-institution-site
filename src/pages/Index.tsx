@@ -117,13 +117,86 @@ const SPECIALISTS = [
   },
 ];
 
-const SERVICES = [
-  { title: "Оформление документов", desc: "Приём, обработка и выдача официальных документов граждан", icon: "FileCheck" },
-  { title: "Консультации граждан", desc: "Устные и письменные консультации по вопросам деятельности учреждения", icon: "MessageSquare" },
-  { title: "Социальная поддержка", desc: "Содействие в получении мер социальной поддержки и льгот", icon: "HeartHandshake" },
-  { title: "Выдача справок", desc: "Оформление и выдача справок установленного образца", icon: "Stamp" },
-  { title: "Приём обращений", desc: "Регистрация и рассмотрение обращений граждан и организаций", icon: "Inbox" },
-  { title: "Государственные услуги", desc: "Предоставление государственных услуг в электронном виде", icon: "Monitor" },
+const LICENSE_NUMBER = "Л041-01137-77/00000000001";
+
+const MEDICAL_ACTIVITIES = [
+  {
+    direction: "Первичная медико-санитарная помощь",
+    icon: "Stethoscope",
+    description: "Оказание первичной врачебной медико-санитарной помощи в амбулаторных условиях взрослому и детскому населению.",
+    licensed: true,
+    services: [
+      {
+        name: "Приём врача-терапевта участкового",
+        code: "A01.31.020",
+        desc: "Осмотр, диагностика, лечение заболеваний внутренних органов. Направление к специалистам. Выдача листов нетрудоспособности.",
+      },
+      {
+        name: "Приём врача-педиатра участкового",
+        code: "A01.31.020.001",
+        desc: "Диспансеризация и профилактические осмотры детей, наблюдение за развитием ребёнка, лечение острых и хронических заболеваний.",
+      },
+      {
+        name: "Профилактические медицинские осмотры",
+        code: "A01.31.018",
+        desc: "Плановые профилактические осмотры для выявления заболеваний на ранних стадиях.",
+      },
+    ],
+  },
+  {
+    direction: "Консультативно-диагностическая помощь",
+    icon: "ClipboardList",
+    description: "Консультации врачей-специалистов, инструментальная и лабораторная диагностика.",
+    licensed: true,
+    services: [
+      {
+        name: "Приём врача-хирурга",
+        code: "A01.28.001",
+        desc: "Консультация, диагностика и лечение хирургических заболеваний в амбулаторных условиях, малые хирургические вмешательства.",
+      },
+      {
+        name: "Приём врача-невролога",
+        code: "A01.23.001",
+        desc: "Диагностика и лечение заболеваний нервной системы, головного и спинного мозга.",
+      },
+      {
+        name: "Функциональная диагностика",
+        code: "A05.10.006",
+        desc: "ЭКГ, суточное мониторирование АД, исследование функции внешнего дыхания.",
+      },
+    ],
+  },
+  {
+    direction: "Вакцинопрофилактика",
+    icon: "Syringe",
+    description: "Проведение профилактических прививок в соответствии с национальным календарём прививок и по эпидемическим показаниям.",
+    licensed: true,
+    services: [
+      {
+        name: "Иммунизация в рамках национального календаря",
+        code: "A11.01.001",
+        desc: "Вакцинация против гриппа, кори, краснухи, гепатита B, дифтерии, столбняка и других инфекций.",
+      },
+      {
+        name: "Иммунизация по эпидемическим показаниям",
+        code: "A11.01.001.001",
+        desc: "Вакцинация при угрозе распространения инфекционных заболеваний.",
+      },
+    ],
+  },
+  {
+    direction: "Паллиативная медицинская помощь",
+    icon: "HeartHandshake",
+    description: "Комплекс медицинских вмешательств, направленных на избавление от боли и облегчение тяжёлых проявлений заболеваний.",
+    licensed: true,
+    services: [
+      {
+        name: "Патронажное наблюдение на дому",
+        code: "A01.31.020.002",
+        desc: "Медицинское наблюдение и уход за пациентами, нуждающимися в паллиативной помощи, на дому.",
+      },
+    ],
+  },
 ];
 
 const DOCUMENTS = [
@@ -542,39 +615,120 @@ function AboutSection() {
 }
 
 function ServicesSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="section-title text-4xl">Услуги</h1>
+        <h1 className="section-title text-4xl">Медицинская деятельность</h1>
         <div className="w-16 h-1 rounded mt-2" style={{ background: "var(--gov-blue)" }}></div>
-        <p className="text-gray-600 text-lg mt-3">Перечень государственных и муниципальных услуг, предоставляемых учреждением</p>
+        <p className="text-gray-600 text-lg mt-3">
+          Информация о видах медицинской деятельности в соответствии с лицензией
+        </p>
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {SERVICES.map((s, i) => (
-          <div key={i} className="card-hover bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div
-              className="w-14 h-14 rounded-xl mb-4 flex items-center justify-center"
-              style={{ background: "var(--gov-blue-pale)" }}
-            >
-              <Icon name={s.icon} size={26} style={{ color: "var(--gov-blue)" }} />
+
+      {/* Лицензионная плашка */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-green-50 border border-green-200 rounded-2xl px-5 py-4">
+        <div className="flex items-center gap-3 flex-1">
+          <Icon name="BadgeCheck" size={24} className="text-green-600 flex-shrink-0" />
+          <div>
+            <div className="font-bold text-green-800 text-base">Все услуги лицензированы</div>
+            <div className="text-green-700 text-sm">
+              Лицензия на медицинскую деятельность №{LICENSE_NUMBER}
             </div>
-            <h3 className="font-bold text-xl mb-2 text-gray-900">{s.title}</h3>
-            <p className="text-gray-600 leading-relaxed">{s.desc}</p>
+          </div>
+        </div>
+        <a
+          href="https://islod.roszdravnadzor.gov.ru/licenses/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-shrink-0 flex items-center gap-1.5 text-sm font-semibold hover:underline"
+          style={{ color: "var(--gov-blue)" }}
+        >
+          <Icon name="ExternalLink" size={13} />
+          Проверить в реестре
+        </a>
+      </div>
+
+      {/* Направления деятельности */}
+      <div className="space-y-4">
+        {MEDICAL_ACTIVITIES.map((activity, i) => (
+          <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+            {/* Заголовок направления */}
             <button
-              className="mt-4 text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all"
-              style={{ color: "var(--gov-blue)" }}
+              onClick={() => setOpenIndex(openIndex === i ? null : i)}
+              className="w-full text-left px-6 py-5 flex items-center gap-4 hover:bg-gray-50 transition-colors"
             >
-              Подробнее <Icon name="ArrowRight" size={14} />
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: "var(--gov-blue-pale, #e8f0fb)" }}
+              >
+                <Icon name={activity.icon} size={22} style={{ color: "var(--gov-blue)" }} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-lg text-gray-900">{activity.direction}</div>
+                <div className="text-gray-500 text-sm mt-0.5 line-clamp-1">{activity.description}</div>
+              </div>
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {activity.licensed && (
+                  <span className="hidden sm:flex items-center gap-1 bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full">
+                    <Icon name="CheckCircle" size={11} /> По лицензии
+                  </span>
+                )}
+                <span className="text-xs text-gray-400 font-medium">{activity.services.length} услуг</span>
+                <Icon
+                  name={openIndex === i ? "ChevronUp" : "ChevronDown"}
+                  size={20}
+                  className="text-gray-400"
+                />
+              </div>
             </button>
+
+            {/* Раскрытый список услуг */}
+            {openIndex === i && (
+              <div className="border-t border-gray-100 animate-fade-in">
+                <div className="px-6 py-4 bg-gray-50">
+                  <p className="text-gray-600 text-sm leading-relaxed">{activity.description}</p>
+                </div>
+                <div className="divide-y divide-gray-100">
+                  {activity.services.map((svc, j) => (
+                    <div key={j} className="px-6 py-4 flex items-start gap-4">
+                      <div className="flex-shrink-0 mt-0.5">
+                        <span className="inline-block bg-blue-50 text-blue-600 text-xs font-mono font-semibold px-2 py-0.5 rounded border border-blue-100">
+                          {svc.code}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-gray-900 text-base mb-0.5">{svc.name}</div>
+                        <div className="text-gray-600 text-sm leading-relaxed">{svc.desc}</div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <Icon name="CheckCircle" size={16} className="text-green-500 mt-1" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-6 py-3 bg-blue-50 border-t border-blue-100 flex items-center gap-2 text-xs text-blue-700">
+                  <Icon name="Info" size={12} />
+                  Услуги оказываются в рамках лицензии №{LICENSE_NUMBER}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
+
+      {/* Запись */}
       <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">
         <div className="flex items-start gap-4">
-          <Icon name="Info" size={24} style={{ color: "var(--gov-blue)" }} className="flex-shrink-0 mt-1" />
+          <Icon name="CalendarCheck" size={24} style={{ color: "var(--gov-blue)" }} className="flex-shrink-0 mt-0.5" />
           <div>
             <div className="font-bold text-lg mb-1" style={{ color: "var(--gov-blue)" }}>Предварительная запись</div>
-            <p className="text-gray-700">Для получения большинства услуг рекомендуем записаться заранее. Обратитесь по телефону <strong>+7 (495) 000-00-00</strong> или лично.</p>
+            <p className="text-gray-700">
+              Запись на приём по телефону <strong>+7 (495) 000-00-00</strong> (Пн–Пт, 08:00–20:00),
+              через портал <strong>Госуслуги</strong> или регистратуру учреждения.
+            </p>
           </div>
         </div>
       </div>
