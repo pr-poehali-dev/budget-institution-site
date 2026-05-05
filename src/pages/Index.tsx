@@ -110,6 +110,21 @@ const NEWS = [
   },
 ];
 
+const LICENSE = {
+  number: "Л041-01137-77/00000000001",
+  issueDate: "15 марта 2021 года",
+  issuedBy: "Департамент здравоохранения города Москвы",
+  activities: [
+    "Амбулаторно-поликлиническая медицинская помощь",
+    "Первичная медико-санитарная помощь",
+    "Диагностика и лечение заболеваний",
+    "Профилактические медицинские осмотры",
+    "Вакцинация и иммунопрофилактика",
+  ],
+  registryUrl: "https://islod.roszdravnadzor.gov.ru/licenses/",
+  qrData: "https://islod.roszdravnadzor.gov.ru/licenses/Л041-01137-77/00000000001",
+};
+
 const REQUISITES = {
   fullName: "Государственное бюджетное учреждение здравоохранения «Городская поликлиника №1»",
   shortName: "ГБУЗ «Городская поликлиника №1»",
@@ -639,6 +654,120 @@ function DocumentsSection() {
         <div className="w-16 h-1 rounded mt-2" style={{ background: "var(--gov-blue)" }}></div>
         <p className="text-gray-600 text-lg mt-3">Нормативные и регламентирующие документы учреждения</p>
       </div>
+
+      {/* Лицензия на медицинскую деятельность */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3" style={{ background: "#f0fdf4" }}>
+          <Icon name="BadgeCheck" size={22} className="text-green-600 flex-shrink-0" />
+          <div>
+            <h2 className="font-bold text-lg text-green-800">Лицензия на медицинскую деятельность</h2>
+            <p className="text-green-700 text-xs mt-0.5">В соответствии с Постановлением Правительства РФ №408 от 01.06.2021</p>
+          </div>
+          <span className="ml-auto flex-shrink-0 bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+            <Icon name="CheckCircle" size={12} /> Действующая
+          </span>
+        </div>
+
+        <div className="p-6 grid md:grid-cols-3 gap-6">
+          {/* Основные данные */}
+          <div className="md:col-span-2 space-y-4">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="bg-gray-50 rounded-xl px-4 py-3">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Регистрационный номер</div>
+                <div className="font-bold text-gray-900 text-base tracking-wide">{LICENSE.number}</div>
+              </div>
+              <div className="bg-gray-50 rounded-xl px-4 py-3">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Дата предоставления</div>
+                <div className="font-bold text-gray-900 text-base">{LICENSE.issueDate}</div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl px-4 py-3">
+              <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Лицензирующий орган</div>
+              <div className="font-semibold text-gray-900">{LICENSE.issuedBy}</div>
+            </div>
+
+            <div>
+              <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Лицензируемые виды деятельности</div>
+              <ul className="space-y-1.5">
+                {LICENSE.activities.map((a, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                    <Icon name="CheckCircle" size={15} className="text-green-500 flex-shrink-0 mt-0.5" />
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Ссылка на реестр */}
+            <div className="bg-blue-50 rounded-xl px-4 py-3 border border-blue-100">
+              <div className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1 flex items-center gap-1">
+                <Icon name="Info" size={12} /> Проверка в реестре лицензий
+              </div>
+              <p className="text-sm text-gray-700 mb-2">
+                Выписка из реестра лицензий Росздравнадзора с УКЭП лицензирующего органа — по QR-коду или ссылке:
+              </p>
+              <a
+                href={LICENSE.registryUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-semibold hover:underline"
+                style={{ color: "var(--gov-blue)" }}
+              >
+                <Icon name="ExternalLink" size={14} />
+                islod.roszdravnadzor.gov.ru
+              </a>
+            </div>
+          </div>
+
+          {/* QR-код */}
+          <div className="flex flex-col items-center justify-start gap-3">
+            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider self-start">QR-код выписки из реестра</div>
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-4 flex flex-col items-center gap-3 w-full">
+              {/* QR-код: визуальная имитация (в реальности — загружаемый файл от Росздравнадзора) */}
+              <div className="w-40 h-40 bg-gray-50 rounded-xl border border-gray-200 flex flex-col items-center justify-center gap-2 relative overflow-hidden">
+                <div className="grid grid-cols-7 gap-0.5 opacity-60">
+                  {Array.from({ length: 49 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-4 h-4 rounded-sm"
+                      style={{
+                        background: [0,1,2,7,8,14,42,43,44,45,46,48,6,13,35,36,41].includes(i)
+                          ? "#1a2533"
+                          : Math.random() > 0.55 ? "#1a2533" : "transparent"
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="bg-white rounded-lg p-1">
+                    <Icon name="QrCode" size={28} className="text-gray-700" />
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 text-center leading-tight">
+                Двухмерный штриховой код выписки из реестра лицензий с УКЭП
+              </p>
+              <a
+                href={LICENSE.registryUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full text-center text-xs font-semibold py-2 rounded-lg text-white transition-all hover:opacity-90"
+                style={{ background: "var(--gov-blue)" }}
+              >
+                Открыть выписку
+              </a>
+            </div>
+            <p className="text-xs text-gray-400 text-center leading-relaxed">
+              Простой скан лицензии не допускается согласно требованиям законодательства
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Остальные документы */}
+      <div>
+        <h2 className="text-xl font-bold mb-4" style={{ color: "var(--gov-blue)" }}>Прочие документы</h2>
       <div className="space-y-3">
         {DOCUMENTS.map((d, i) => (
           <div key={i} className="card-hover bg-white rounded-2xl px-6 py-4 shadow-sm border border-gray-100 flex items-center justify-between gap-4">
@@ -660,6 +789,7 @@ function DocumentsSection() {
             </button>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );
