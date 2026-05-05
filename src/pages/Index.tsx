@@ -141,6 +141,19 @@ export default function Index() {
   const [contrast, setContrast] = useState<ContrastMode>("normal");
   const [a11yOpen, setA11yOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [cookieAccepted, setCookieAccepted] = useState(() => {
+    return localStorage.getItem("cookie_consent") === "accepted";
+  });
+
+  const acceptCookies = () => {
+    localStorage.setItem("cookie_consent", "accepted");
+    setCookieAccepted(true);
+  };
+
+  const rejectCookies = () => {
+    localStorage.setItem("cookie_consent", "rejected");
+    setCookieAccepted(true);
+  };
 
   const navigate = (section: Section) => {
     setActiveSection(section);
@@ -336,6 +349,41 @@ export default function Index() {
           <span>Противодействие коррупции</span>
         </a>
       </div>
+
+      {/* Cookie banner */}
+      {!cookieAccepted && (
+        <div className="fixed bottom-0 left-0 right-0 z-[60] animate-fade-in" style={{ background: "rgba(26,37,51,0.97)", backdropFilter: "blur(6px)" }}>
+          <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex items-start gap-3 flex-1">
+              <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: "var(--gov-blue)" }}>
+                <Icon name="Cookie" size={18} className="text-white" />
+              </div>
+              <div className="text-sm text-gray-300 leading-relaxed">
+                <span className="font-semibold text-white">Использование файлов cookie.</span>{" "}
+                Настоящий сайт использует файлы cookie и аналогичные технологии в соответствии с{" "}
+                <a href="#" className="text-blue-400 hover:text-blue-300 underline">Политикой конфиденциальности</a>.
+                {" "}Продолжая работу с сайтом, вы соглашаетесь на обработку персональных данных согласно{" "}
+                <span className="text-gray-400">Федеральному закону №152-ФЗ «О персональных данных».</span>
+              </div>
+            </div>
+            <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto">
+              <button
+                onClick={acceptCookies}
+                className="flex-1 sm:flex-none font-semibold px-5 py-2.5 rounded-xl text-sm text-white transition-all hover:opacity-90"
+                style={{ background: "var(--gov-blue)" }}
+              >
+                Принять
+              </button>
+              <button
+                onClick={rejectCookies}
+                className="flex-1 sm:flex-none font-medium px-5 py-2.5 rounded-xl text-sm text-gray-300 border border-gray-600 hover:border-gray-400 transition-all"
+              >
+                Отклонить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Кнопка наверх — правый нижний угол */}
       {showScrollTop && (
